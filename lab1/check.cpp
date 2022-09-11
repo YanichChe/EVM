@@ -16,8 +16,6 @@ void CheckInput(double x, int n)
     }
 }
 
-
-
 void CheckArgc(int argc)
 {
     if (argc != 3)
