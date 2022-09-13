@@ -32,12 +32,12 @@ void PrintTimeProgramWork()
     int runs = 10;
 
     double x = 0.2;
-    int n = 10000000;
+    long long int n = 2500000000;
 
     for (int i = 0; i < runs; i++)
     {
         clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-        cout << CountLogarithm(0.2, 5) << endl;
+        cout << CountLogarithm(0.2, n) << endl;
         clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
         cout << "Run №" << i + 1 << " x = " << x << " n = " << n << ". Time taken ";

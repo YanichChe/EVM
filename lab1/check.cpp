@@ -3,7 +3,7 @@
 #include <iostream>
 #include <exception>
 
-void CheckInput(double x, int n)
+void CheckInput(double x, long long int n)
 {
     if (x <= -1 || x > 1)
     {
