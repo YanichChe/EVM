@@ -1,6 +1,5 @@
 #include "check.h"
 #include "logarithm.h"
-#include <cmath>
 
 double CountLogarithm(double x, long long int n)
 {
@@ -10,8 +9,8 @@ double CountLogarithm(double x, long long int n)
 
     for (long long int i = 1; i <= n; i++)
     {
-        result += pow(-1, i + 1) * x / i;
-        x *= x;
+        result += x / i;
+        x *= -x;
     }
 
     return result;

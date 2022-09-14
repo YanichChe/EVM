@@ -9,30 +9,29 @@
 using namespace std;
 
 bool CommandLineWork(int argc, char *argv[]);
-void PrintTimeProgramWork();
+void PrintTimeProgramWork(long long int n);
 
 int main(int argc, char *argv[])
 {
 
-    /* if (!CommandLineWork(argc, argv))
-     {
-         return EXIT_FAILURE;
-     }*/
-
-   PrintTimeProgramWork();
+    /*if (!CommandLineWork(argc, argv))
+    {
+        return EXIT_FAILURE;
+    }
+    */
+    PrintTimeProgramWork(atoll(argv[1]));
 
     return EXIT_SUCCESS;
 }
 
-void PrintTimeProgramWork()
+void PrintTimeProgramWork(long long int n)
 {
     struct timespec start, end;
 
     double totalTime = 0;
-    int runs = 10;
+    int runs = 1;
 
     double x = 0.2;
-    long long int n = 2500000000;
 
     for (int i = 0; i < runs; i++)
     {
@@ -46,7 +45,7 @@ void PrintTimeProgramWork()
         totalTime += time;
     }
 
-    cout << "Average time: " << totalTime / runs << " sec" << endl;
+    //cout << "Average time: " << totalTime / runs << " sec" << endl;
 }
 
 bool CommandLineWork(int argc, char *argv[])
@@ -54,11 +53,11 @@ bool CommandLineWork(int argc, char *argv[])
     CheckArgc(argc);
 
     double x = atof(argv[1]);
-    int n = atoi(argv[2]);
+    int n = atoll(argv[2]);
 
     try
     {
-        cout << fixed << setprecision(5) << CountLogarithm(x, n) << endl;
+        cout << fixed << setprecision(10) << CountLogarithm(x, n) << endl;
     }
     catch (const logic_error &e)
     {
