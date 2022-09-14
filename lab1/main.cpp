@@ -14,12 +14,12 @@ void PrintTimeProgramWork(long long int n);
 int main(int argc, char *argv[])
 {
 
-    /*if (!CommandLineWork(argc, argv))
+    if (!CommandLineWork(argc, argv))
     {
         return EXIT_FAILURE;
     }
-    */
-    PrintTimeProgramWork(atoll(argv[1]));
+    
+   //PrintTimeProgramWork(atoll(argv[1]));
 
     return EXIT_SUCCESS;
 }
