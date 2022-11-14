@@ -1,81 +1,55 @@
-#include <libusb-1.0/libusb.h>
-#include <cstdio>
+#include <iostream>            // for standard I/O
+#include <string>              // for strings
+#include <iomanip>             // for controlling float print precision
+#include <sstream>             // string to number conversion
+#include <opencv2/core.hpp>    // Basic OpenCV structures (cv::Mat, Scalar)
+#include <opencv2/imgproc.hpp> // Gaussian Blur
+#include <opencv2/videoio.hpp>
+#include <opencv2/highgui.hpp> // OpenCV window I/O
+#include <opencv2/imgcodecs.hpp>
+#include <ctime>
 
+using namespace std;
+using namespace cv;
 
-void printdev(libusb_device* dev);
+int main(int argc, char *argv[])
+{
+    VideoCapture cap(0); // captRefrnc(sourceReference);//, captUndTst(sourceCompareWith);
 
+    Mat img;
+    Mat newImage;
+    int frameCounter = 0;
+    double totalTime = 0, inputTime = 0, procTime = 0, outputTime = 0;
 
-int main(){
-    libusb_device** devs; // указатель на указатель на устройство, используется для получения списка устройств
-    libusb_context* ctx = NULL; // контекст сессии libusb
+    while (true)
+    {
+        clock_t c_start = clock();
+        cap.read(img);
+        inputTime += (clock() - c_start);
 
+        c_start = clock();
+        cvtColor(img, newImage, COLOR_BGR2HSV);
+        // Canny(img, newImage1, 100, 200)
+        procTime += (clock() - c_start);
 
-    int r; // для возвращаемых значений
-    ssize_t cnt; // число найденных USB-устройств
-    r = libusb_init(&ctx); // инициализировать библиотеку libusb, открыть сессию работы с libusb
+        c_start = clock();
+        imshow("Modificed Image", newImage);
+        outputTime += (clock() - c_start);
 
+        frameCounter++;
 
-    if (r < 0){
-        fprintf(stderr, "Ошибка: инициализация не выполнена, код: %d.\n", r);
-        return 1;
+        char c = waitKey(10);
+        if (c == 27)
+            break;
     }
 
+    totalTime = clock();
+    double percent = totalTime / 100.1;
 
-    // получить список всех найденных USB- устройств
-    cnt = libusb_get_device_list(ctx, &devs);
-    if (cnt < 0){
-        fprintf(stderr, "Ошибка: список USB устройств не получен. Код: %d\n", r);
-        return 1;
-    }
-
-
-    printf("найдено устройств: %ld\n", cnt);
-
-
-    for (ssize_t i = 0; i < cnt; i++) { // цикл перебора всех устройств
-        printdev(devs[i]); // печать параметров устройства
-    }
-
-
-    libusb_free_device_list(devs, 1); // освободить память, выделенную функцией получения списка устройств
-    libusb_exit(ctx); // завершить работу с библиотекой libusb, закрыть сессию работы с libusb
-
+    cout << "Frame rate: " << (frameCounter / (totalTime / CLOCKS_PER_SEC)) << endl;
+    cout << "Input time: " << inputTime / percent << "%" << endl;
+    cout << "Processing time: " << procTime / percent << "%" << endl;
+    cout << "Output time: " << outputTime / percent << "%" << endl;
 
     return 0;
-}
-
-
-void printdev(libusb_device* dev){
-    libusb_device_descriptor desc{}; // дескриптор устройства
-    libusb_device_handle* handle = NULL; 
-
-
-    unsigned char str[256];
-
-
-    int r = libusb_get_device_descriptor(dev, &desc); // получить дескриптор
-    if (r < 0){
-        fprintf(stderr, "Ошибка: дескриптор устройства не получен, код: %d.\n", r);
-        return;
-    }
-
-
-    printf("class: %.2x vendor: %.4x product: %.4x ",
-        (int)desc.bDeviceClass,
-     
-        desc.idVendor,
-        desc.idProduct
-    );
-
-
-    libusb_open(dev, &handle);
-    if (handle && desc.iSerialNumber) {
-        r = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, str, sizeof(str));
-        if (r != 0) {
-            printf("serial number: %s\n", str);
-        }
-        else{
-            printf("null\n");
-        }
-    }
 }
