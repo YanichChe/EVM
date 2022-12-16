@@ -15,8 +15,11 @@ int main(void){
 
     auto *array = new unsigned int[N];
 
-    unsigned int offset = 16 * 1024 * 1024; // 16 MB
+    //unsigned int blockSize = 32 * 1024; // 32Kb
+    //unsigned int blockSize = 256 * 1024; // 256Kb
     unsigned int blockSize = 8 * 1024 * 1024; // 8 MB
+    unsigned int offset = blockSize;
+
 
     for(int fragments = 1; fragments <= FRAGMENTS_COUNT; fragments++)
     {
@@ -64,9 +67,9 @@ unsigned long run(unsigned int const *array)
 void countTime(unsigned int *array, unsigned int fragments, int offset, int size)
 {
     initArray(array, fragments, offset, size);
-    std::cout << std::left << std::setw(2)
-                           << fragments << " fragments "
-                           << std::setw(2)
-                           << run(array) << " tacts"
+    std::cout << std::left << std::setw(4)
+                           << fragments
+                           << std::setw(4)
+                           << run(array)
                            << std::endl;
 }
